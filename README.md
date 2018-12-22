@@ -36,4 +36,5 @@ go install hello
 
 # in different terminal window/tab
 curl localhost:8080/poem?name=wordsworth | jq
+curl localhost:8080/poem?name=theprelude | jq
 ```
