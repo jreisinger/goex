@@ -83,3 +83,21 @@ func TestNumWords(t *testing.T) {
 		t.Fatalf("Wrong number of words")
 	}
 }
+
+func TestNumThe(t *testing.T) {
+	p := Poem{}
+	if p.NumThe() != 0 {
+		t.Fatalf("Wrong 'The lines' count")
+	}
+
+	// we only count 'The' (with capital T)
+	p = Poem{{"The best thing", "is to be the best."}}
+	if p.NumThe() != 1 {
+		t.Fatalf("Wrong 'The lines' count")
+	}
+
+	p = Poem{{"The best thing", "is to be The best."}}
+	if p.NumThe() != 2 {
+		t.Fatalf("Wrong 'The lines' count")
+	}
+}

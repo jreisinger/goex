@@ -96,17 +96,30 @@ func (p Poem) NumWords() int {
 	return count
 }
 
+//func (p Poem) NumThe() int {
+//	count := 0
+//	for _, s := range p {
+//		for _, l := range s {
+//			sl := string(l)
+//			if strings.Contains(sl, "The") {
+//				count += 1
+//			}
+//		}
+//	}
+//
+//	return count
+//}
+
 func (p Poem) NumThe() int {
 	count := 0
 	for _, s := range p {
 		for _, l := range s {
 			sl := string(l)
 			if strings.Contains(sl, "The") {
-				count += 1
+				count++
 			}
 		}
 	}
-
 	return count
 }
 

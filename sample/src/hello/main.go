@@ -8,9 +8,10 @@ import (
 )
 
 type poemWithTitle struct {
-	Title    string
-	Body     poetry.Poem
-	NumWords int
+	Title       string
+	Body        poetry.Poem
+	NumWords    int
+	NumTheLines int
 }
 
 func poemHandler(w http.ResponseWriter, r *http.Request) {
@@ -24,7 +25,7 @@ func poemHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//pwt := poemWithTitle{Title: poemName, Body: p, NumWords: p.NumWords()}
-	pwt := poemWithTitle{poemName, p, p.NumWords()}
+	pwt := poemWithTitle{poemName, p, p.NumWords(), p.NumThe()}
 
 	enc := json.NewEncoder(w)
 	err = enc.Encode(pwt)
