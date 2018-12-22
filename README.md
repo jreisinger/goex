@@ -22,7 +22,7 @@ standard cgo package"
 
 6. config - The JSON config file
 
-usage
+Usage
 =====
 
 ```
