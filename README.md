@@ -21,3 +21,19 @@ standard cgo package"
 5. src/shuffler - The shuffler package
 
 6. config - The JSON config file
+
+usage
+=====
+
+```
+cd sample
+export GOPATH=`pwd`
+
+go test poetry
+
+go install hello
+./bin/hello
+
+# in different terminal window/tab
+curl localhost:8080/poem?name=wordsworth | jq
+```
