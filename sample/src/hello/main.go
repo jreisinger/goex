@@ -5,11 +5,13 @@ import (
 	"log"
 	"net/http"
 	"poetry"
+	_ "strconv"
 )
 
 type poemWithTitle struct {
-	Title       string
-	Body        poetry.Poem
+	Title string
+	Body  poetry.Poem
+	//NumWords    string
 	NumWords    int
 	NumTheLines int
 }
@@ -25,6 +27,7 @@ func poemHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//pwt := poemWithTitle{Title: poemName, Body: p, NumWords: p.NumWords()}
+	//pwt := poemWithTitle{poemName, p, strconv.Itoa(p.NumWords()), p.NumThe()}
 	pwt := poemWithTitle{poemName, p, p.NumWords(), p.NumThe()}
 
 	enc := json.NewEncoder(w)
