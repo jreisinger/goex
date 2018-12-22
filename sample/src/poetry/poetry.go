@@ -46,6 +46,8 @@ func LoadPoem(name string) (Poem, error) {
 	return p, nil
 }
 
+// Let's make Stanza sortable. We do it by defining methods required by sort
+// Interface. And thus satisfying the sort Interface.
 func (s Stanza) Len() int {
 	return len(s)
 }
@@ -53,6 +55,7 @@ func (s Stanza) Swap(i, j int) {
 	s[i], s[j] = s[j], s[i]
 }
 func (s Stanza) Less(i, j int) bool {
+	// sort by lines length
 	return len(s[i]) < len(s[j])
 }
 

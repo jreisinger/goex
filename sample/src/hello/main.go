@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"poetry"
+	_ "sort"
 	_ "strconv"
 )
 
@@ -25,6 +26,9 @@ func poemHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	// sort first stanza by line length
+	//sort.Sort(p[0])
 
 	//pwt := poemWithTitle{Title: poemName, Body: p, NumWords: p.NumWords()}
 	//pwt := poemWithTitle{poemName, p, strconv.Itoa(p.NumWords()), p.NumThe()}
