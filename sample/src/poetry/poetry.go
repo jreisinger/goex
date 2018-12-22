@@ -38,7 +38,7 @@ func LoadPoem(name string) (Poem, error) {
 		s = append(s, Line(l))
 	}
 	p = append(p, s)
-	
+
 	if scan.Err() != nil {
 		return nil, scan.Err()
 	}
@@ -71,6 +71,19 @@ func (p Poem) NumLines() (count int) {
 	return
 }
 
+//func (p Poem) NumWords() int {
+//	count := 0
+//	for _, s := range p {
+//		for _, l := range s {
+//			sl := string(l)
+//			parts := strings.Split(sl, " ")
+//			count += len(parts)
+//		}
+//	}
+//
+//	return count
+//}
+
 func (p Poem) NumWords() int {
 	count := 0
 	for _, s := range p {
@@ -80,7 +93,6 @@ func (p Poem) NumWords() int {
 			count += len(parts)
 		}
 	}
-
 	return count
 }
 
@@ -136,4 +148,3 @@ func (p Poem) String() string {
 
 	return result
 }
-

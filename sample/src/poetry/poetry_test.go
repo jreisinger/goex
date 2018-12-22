@@ -11,10 +11,10 @@ func TestNumStanzas(t *testing.T) {
 	}
 
 	p = Poem{{"And from my pillow, looking forth by light",
-		"Of moon or favouring stars, I could behold", 
-		"The antechapel where the statue stood", 
-		"Of Newton with his prism and silent face,", 
-		"The marble index of a mind for ever", 
+		"Of moon or favouring stars, I could behold",
+		"The antechapel where the statue stood",
+		"Of Newton with his prism and silent face,",
+		"The marble index of a mind for ever",
 		"Voyaging through strange seas of Thought, alone."}}
 
 	if p.NumStanzas() != 1 {
@@ -29,17 +29,17 @@ func TestNumLines(t *testing.T) {
 	}
 
 	p = Poem{{"And from my pillow, looking forth by light",
-		"Of moon or favouring stars, I could behold", 
-		"The antechapel where the statue stood", 
-		"Of Newton with his prism and silent face,", 
-		"The marble index of a mind for ever", 
+		"Of moon or favouring stars, I could behold",
+		"The antechapel where the statue stood",
+		"Of Newton with his prism and silent face,",
+		"The marble index of a mind for ever",
 		"Voyaging through strange seas of Thought, alone."}}
 
 	if p.NumLines() != 6 {
 		t.Fatalf("Unexpected line count %d", p.NumLines())
 	}
 }
- 
+
 func TestStats(t *testing.T) {
 	p := Poem{}
 	v, c, puncs := p.Stats()
@@ -60,13 +60,25 @@ func TestStats(t *testing.T) {
 	}
 }
 
+//func TestNumWords(t *testing.T) {
+//	p := Poem{}
+//	if p.NumWords() != 0 {
+//		t.Fatalf("Wrong number of words")
+//	}
+//
+//	p = Poem{{"Hello, World!"}}
+//	if p.NumWords() != 2 {
+//		t.Fatalf("Wrong number of words")
+//	}
+//}
+
 func TestNumWords(t *testing.T) {
 	p := Poem{}
 	if p.NumWords() != 0 {
 		t.Fatalf("Wrong number of words")
 	}
 
-	p = Poem{{"Hello, World!"}}
+	p = Poem{{"Hello, world!"}}
 	if p.NumWords() != 2 {
 		t.Fatalf("Wrong number of words")
 	}
