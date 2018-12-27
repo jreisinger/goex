@@ -4,10 +4,17 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"os"
 	"poetry"
 	_ "sort"
 	_ "strconv"
 )
+
+type config struct {
+	Route       string
+	BindAddress string   `json:"addr"`
+	ValidPoems  []string `json:"valid"`
+}
 
 type poemWithTitle struct {
 	Title string
@@ -17,15 +24,31 @@ type poemWithTitle struct {
 	NumTheLines int
 }
 
+// global variable; so I can access it in poemHandler()
+var c config
+
 func poemHandler(w http.ResponseWriter, r *http.Request) {
 	// curl localhost:8080/poem?name=wordsworth | jq
 	r.ParseForm()
 	poemName := r.Form["name"][0]
 
+	found := false
+	for _, v := range c.ValidPoems {
+		if v == poemName {
+			found = true
+			break
+		}
+	}
+
+	if !found {
+		http.Error(w, "File not found (invalid)", http.StatusNotFound)
+		return
+	}
+
 	p, err := poetry.LoadPoem(poemName)
 	if err != nil {
 		//log.Fatal(err)
-		http.Error(w, "File not found", http.StatusNotFound)
+		http.Error(w, "File not found", http.StatusInternalServerError)
 	}
 
 	// sort first stanza by line length
@@ -43,7 +66,18 @@ func poemHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	f, err := os.Open("config")
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	http.HandleFunc("/poem", poemHandler)
-	http.ListenAndServe(":8080", nil)
+	dec := json.NewDecoder(f)
+	err = dec.Decode(&c)
+	f.Close()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	http.HandleFunc(c.Route, poemHandler)
+	http.ListenAndServe(c.BindAddress, nil)
 }
