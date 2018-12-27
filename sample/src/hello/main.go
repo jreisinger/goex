@@ -24,7 +24,8 @@ func poemHandler(w http.ResponseWriter, r *http.Request) {
 
 	p, err := poetry.LoadPoem(poemName)
 	if err != nil {
-		log.Fatal(err)
+		//log.Fatal(err)
+		http.Error(w, "File not found", http.StatusNotFound)
 	}
 
 	// sort first stanza by line length
