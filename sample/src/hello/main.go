@@ -10,6 +10,8 @@ import (
 	_ "strconv"
 )
 
+var cache map[string]poetry.Poem
+
 type config struct {
 	Route       string
 	BindAddress string   `json:"addr"`
@@ -32,24 +34,11 @@ func poemHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	poemName := r.Form["name"][0]
 
-	// Check the poem is valid as defined by the config file.
-	found := false
-	for _, v := range c.ValidPoems {
-		if v == poemName {
-			found = true
-			break
-		}
-	}
-	if !found {
-		http.Error(w, "File not found (invalid)", http.StatusNotFound)
+	// Get the poem from the cache.
+	p, ok := cache[poemName]
+	if !ok {
+		http.Error(w, "File not found", http.StatusNotFound)
 		return
-	}
-
-	// Load the poem from the disk.
-	p, err := poetry.LoadPoem(poemName)
-	if err != nil {
-		//log.Fatal(err)
-		http.Error(w, "File not found", http.StatusInternalServerError)
 	}
 
 	// sort first stanza by line length
@@ -61,7 +50,7 @@ func poemHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Encode poem as JSON.
 	enc := json.NewEncoder(w)
-	err = enc.Encode(pwt)
+	err := enc.Encode(pwt)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -80,6 +69,16 @@ func main() {
 	f.Close()
 	if err != nil {
 		log.Fatal(err)
+	}
+
+	// Pre-load all valid poems into a cache so we don't have to load a poem
+	// each time it is requested.
+	cache = make(map[string]poetry.Poem)
+	for _, name := range c.ValidPoems {
+		cache[name], err = poetry.LoadPoem(name)
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 
 	// Setup and start web server.
