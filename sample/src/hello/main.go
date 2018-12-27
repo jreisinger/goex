@@ -8,8 +8,10 @@ import (
 	"poetry"
 	_ "sort"
 	_ "strconv"
+	"sync"
 )
 
+var cacheMutex sync.Mutex
 var cache map[string]poetry.Poem
 
 type config struct {
@@ -71,14 +73,18 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// Pre-load all valid poems into a cache so we don't have to load a poem
-	// each time it is requested.
+	// Pre-load (in parallel!) all valid poems into a cache so we don't have to
+	// load a poem each time it is requested.
 	cache = make(map[string]poetry.Poem)
 	for _, name := range c.ValidPoems {
-		cache[name], err = poetry.LoadPoem(name)
-		if err != nil {
-			log.Fatal(err)
-		}
+		go func(n string) {
+			cacheMutex.Lock()                  // to protect a map shared between goroutines
+			cache[n], err = poetry.LoadPoem(n) // has to be n, not name!
+			cacheMutex.Unlock()
+			if err != nil {
+				log.Fatal(err)
+			}
+		}(name)
 	}
 
 	// Setup and start web server.
