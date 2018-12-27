@@ -73,10 +73,13 @@ func main() {
 		log.Fatal(err)
 	}
 
+	var wg sync.WaitGroup
+	cache = make(map[string]poetry.Poem)
+
 	// Pre-load (in parallel!) all valid poems into a cache so we don't have to
 	// load a poem each time it is requested.
-	cache = make(map[string]poetry.Poem)
 	for _, name := range c.ValidPoems {
+		wg.Add(1)
 		go func(n string) {
 			cacheMutex.Lock()                  // to protect a map shared between goroutines
 			cache[n], err = poetry.LoadPoem(n) // has to be n, not name!
@@ -84,8 +87,11 @@ func main() {
 			if err != nil {
 				log.Fatal(err)
 			}
+			wg.Done()
 		}(name)
 	}
+
+	wg.Wait() // wait for the cache to be ready before starting the server
 
 	// Setup and start web server.
 	http.HandleFunc(c.Route, poemHandler)
